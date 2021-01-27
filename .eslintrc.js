@@ -29,11 +29,6 @@ module.exports = {
       }
     ]
   },
-  settings: {
-    react: {
-      version: 'detect'
-    }
-  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -41,12 +36,14 @@ module.exports = {
         'react/prop-types': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-        'eslintimport/no-extraneous-dependencies': 'off'
+        '@typescript-eslint/no-explicit-any': 'off'
       }
     }
   ],
   settings: {
+    react: {
+      version: 'detect'
+    },
     'import/resolver': {
       node: {
         paths: ['src']

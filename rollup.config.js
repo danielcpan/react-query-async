@@ -13,9 +13,7 @@ const external = [
 
 export default [
   {
-    input: [
-      'src/index.ts',
-    ],
+    input: ['src/index.ts'],
     output: [
       {
         dir: 'dist',
