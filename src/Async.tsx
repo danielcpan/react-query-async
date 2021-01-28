@@ -2,10 +2,10 @@ import React from 'react';
 import useAsync from './useAsync';
 import { useAsyncContext } from './AsyncProvider';
 import { DEFAULT_COMPONENTS } from './constants';
-import { IAsync } from './types';
+import { AsyncProps, PropsToPass } from './types';
 import { flexRender, RQMergeStatesFn } from './utils';
 
-const Async: React.FC<IAsync> = props => {
+const Async: React.FC<AsyncProps> = props => {
   const config = useAsyncContext();
 
   const { queries = {} } = props.queries || config.queries;
@@ -35,7 +35,7 @@ const Async: React.FC<IAsync> = props => {
     mergeMutationStatesFn
   });
 
-  const propsToPass = { queryState, mutationState, queries, mutations };
+  const propsToPass = { queryState, mutationState, queries, mutations } as PropsToPass;
   const { children } = props;
 
   if (isLoading || queryState.isLoading || mutationState.isLoading) {
