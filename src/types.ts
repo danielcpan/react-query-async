@@ -1,8 +1,8 @@
 export interface DefaultComponents {
-  Loading: () => any | React.ReactNode | string;
-  Fetching: () => any | React.ReactNode | string;
-  Error: () => any | React.ReactNode | string;
-  NoData: () => any | React.ReactNode | string;
+  Loading: (props: PropsToPass) => any | React.ReactNode | string;
+  Fetching: (props: PropsToPass) => any | React.ReactNode | string;
+  Error: (props: PropsToPass) => any | React.ReactNode | string;
+  NoData: (props: PropsToPass) => any | React.ReactNode | string;
 }
 
 export interface OperationState {
@@ -34,6 +34,6 @@ export interface PropsToPass {
   mutationState: OperationState;
 }
 
-export interface IAsyncProvider {
+export interface AsyncProviderProps {
   config?: AsyncProps;
 }
