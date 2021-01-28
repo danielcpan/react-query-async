@@ -1,13 +1,14 @@
 import { RQMergeStatesFn } from './utils';
+import { UseAsyncProps } from './types';
 
 const useAsync = ({
   queries = {},
   mutations = {},
   mergeQueryStatesFn = RQMergeStatesFn,
   mergeMutationStatesFn = RQMergeStatesFn
-}) => {
-  const queryState = mergeQueryStatesFn(queries) as any;
-  const mutationState = mergeMutationStatesFn(mutations) as any;
+}: UseAsyncProps) => {
+  const queryState = mergeQueryStatesFn(queries);
+  const mutationState = mergeMutationStatesFn(mutations);
 
   return [queryState, mutationState];
 };

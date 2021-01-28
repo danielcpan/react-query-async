@@ -29,6 +29,13 @@ export interface AsyncProps {
   children: (props: any) => React.ReactNode;
 }
 
+export interface UseAsyncProps {
+  queries?: any;
+  mutations?: any;
+  mergeQueryStatesFn?: (operations: any) => OperationState;
+  mergeMutationStatesFn?: (operations: any) => OperationState;
+}
+
 export interface PropsToPass {
   queries: any;
   mutations: any;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { OperationState } from './types';
 
 export const flexRender = (Comp: any, props?: any) => {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp;
@@ -63,7 +64,7 @@ export const RQMergeStatesFn = (operations: any) => {
         })
       }),
       {}
-    );
+    ) as OperationState;
 };
 
 export const SWRMergeStatesFn = (operations: any) => {
@@ -80,7 +81,7 @@ export const SWRMergeStatesFn = (operations: any) => {
         : acc.hasData && getHasData(el.data))
     }),
     {}
-  );
+  ) as OperationState;
 };
 
 export const GQLMergeStatesFn = (operations: any) => {
@@ -97,5 +98,5 @@ export const GQLMergeStatesFn = (operations: any) => {
         : acc.hasData && getHasData(el.data))
     }),
     {}
-  );
+  ) as OperationState;
 };

@@ -58,7 +58,7 @@ const Async: React.FC<AsyncProps> = props => {
 };
 
 const AsyncWithErrorBoundary = (props: AsyncProps) => {
-  const config = useAsyncContext() as any;
+  const config = useAsyncContext();
   const { ErrorBoundary, errorBoundaryProps } = props || config;
 
   if (ErrorBoundary) {
