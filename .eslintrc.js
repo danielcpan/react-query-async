@@ -29,6 +29,11 @@ module.exports = {
       }
     ]
   },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -41,9 +46,6 @@ module.exports = {
     }
   ],
   settings: {
-    react: {
-      version: 'detect'
-    },
     'import/resolver': {
       node: {
         paths: ['src']
