@@ -24,6 +24,8 @@ export interface AsyncProps {
   components?: DefaultComponents;
   mergeQueryStatesFn?: (operations: any) => OperationState;
   mergeMutationStatesFn?: (operations: any) => OperationState;
+  ErrorBoundary?: any;
+  errorBoundaryProps?: any;
   children: (props: any) => React.ReactNode;
 }
 

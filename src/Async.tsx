@@ -2,8 +2,8 @@ import React from 'react';
 import useAsync from './useAsync';
 import { useAsyncContext } from './AsyncProvider';
 import { DEFAULT_COMPONENTS } from './constants';
-import { AsyncProps, PropsToPass } from './types';
 import { flexRender, RQMergeStatesFn } from './utils';
+import { AsyncProps, PropsToPass, DefaultComponents } from './types';
 
 const Async: React.FC<AsyncProps> = props => {
   const config = useAsyncContext();
@@ -16,11 +16,11 @@ const Async: React.FC<AsyncProps> = props => {
   const hasData = props.hasData || config.hasData;
   const showFetching = props.showFetching || config.showFetching;
 
-  const { Loading, Fetching, Error, NoData } = {
+  const { Loading, Fetching, Error, NoData }: DefaultComponents = {
     ...props.components,
     ...config.components,
     ...DEFAULT_COMPONENTS
-  } as any;
+  };
 
   const mergeQueryStatesFn =
     props.mergeQueryStatesFn || config.mergeQueryStatesFn || RQMergeStatesFn;
@@ -57,7 +57,7 @@ const Async: React.FC<AsyncProps> = props => {
   return children(propsToPass);
 };
 
-const AsyncWithErrorBoundary = (props: any) => {
+const AsyncWithErrorBoundary = (props: AsyncProps) => {
   const config = useAsyncContext() as any;
   const { ErrorBoundary, errorBoundaryProps } = props || config;
 
