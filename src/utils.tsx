@@ -1,40 +1,33 @@
 import React from 'react';
 
-// Flexible render fn
 export const flexRender = (Comp: any, props?: any) => {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp;
 };
 
-const isReactComponent = (component: any) => {
+export const isReactComponent = (comp: any) => {
+  return isClassComponent(comp) || typeof comp === 'function' || isExoticComponent(comp);
+};
+
+export const isClassComponent = (comp: any) => {
   return (
-    isClassComponent(component) || typeof component === 'function' || isExoticComponent(component)
+    typeof comp === 'function' &&
+    (() => !!Object.getPrototypeOf(comp)?.prototype?.isReactComponent)()
   );
 };
 
-const isClassComponent = (component: any) => {
+export const isExoticComponent = (comp: any) => {
   return (
-    typeof component === 'function' &&
-    (() => {
-      const proto = Object.getPrototypeOf(component);
-      return proto.prototype && proto.prototype.isReactComponent;
-    })()
+    typeof comp === 'object' &&
+    typeof comp.$$typeof === 'symbol' &&
+    ['react.memo', 'react.forward_ref'].includes(comp.$$typeof.description)
   );
 };
 
-const isExoticComponent = (component: any) => {
-  return (
-    typeof component === 'object' &&
-    typeof component.$$typeof === 'symbol' &&
-    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-  );
-};
+export const isFunction = (fn: any) => fn && {}.toString.call(fn) === '[object Function]';
 
-export const isFunction = (fnToCheck: any) => {
-  return fnToCheck && {}.toString.call(fnToCheck) === '[object Function]';
-};
+export const isObject = (obj: any) => typeof obj === 'object' && obj !== null;
 
-const getStatus = ({ isIdle, isLoading, isError, isSuccess }: any) => {
-  if (isIdle) return 'idle';
+const getStatus = ({ isLoading, isError, isSuccess }: any) => {
   if (isLoading) return 'loading';
   if (isError) return 'isError';
   if (isSuccess) return 'isSuccess';
@@ -42,33 +35,30 @@ const getStatus = ({ isIdle, isLoading, isError, isSuccess }: any) => {
   return 'unknown';
 };
 
-const isObject = (obj: any) => typeof obj === 'object' && obj !== null;
-
 export const getHasData = (data: any): boolean => {
   if (Array.isArray(data)) return data.length > 0;
-  if (isObject(data)) return Object.keys(data).length === 0;
+  if (isObject(data)) return Object.keys(data).length > 0;
 
-  return data !== undefined;
+  return data !== undefined && data !== null;
 };
 
-export const defaultMergeQueryStatesFn = (queries: any) => {
-  return Object.values(queries)
+export const RQMergeStatesFn = (operations: any) => {
+  return Object.values(operations)
     .filter((el: any) => el.status !== 'idle')
     .reduce(
       (acc: any, el: any) => ({
         ...acc,
-        isIdle: !!(acc.isIdle === undefined ? el.isIdle : acc.isIdle && el.isIdle),
         isLoading: !!(acc.isLoading || el.isLoading),
+        isPaused: !!(acc.isPaused || el.isPaused),
         isFetching: !!(acc.isFetching || el.isFetching),
-        isError: !!(acc.isError || el.isError),
+        hasError: !!(acc.hasError || el.isError),
         isSuccess: !!(acc.isSuccess === undefined ? el.isSuccess : acc.isSuccess && el.isSuccess),
         hasData: !!(acc.hasData === undefined
           ? getHasData(el.data)
           : acc.hasData && getHasData(el.data)),
         status: getStatus({
-          isIdle: el.isIdle,
           isLoading: el.isLoading,
-          isError: el.isError,
+          hasError: el.isError,
           isSuccess: el.isSuccess
         })
       }),
@@ -76,27 +66,36 @@ export const defaultMergeQueryStatesFn = (queries: any) => {
     );
 };
 
-export const defaultMergeMutationStatesFn = (mutations: any) => {
-  return Object.values(mutations)
-    .filter((el: any) => el.status !== 'idle')
-    .reduce(
-      (acc: any, el: any) => ({
-        ...acc,
-        isIdle: !!(acc.isIdle === undefined ? el.isIdle : acc.isIdle && el.isIdle),
-        isLoading: !!(acc.isLoading || el.isLoading),
-        isPaused: !!(acc.isPaused || el.isPaused),
-        isError: !!(acc.isError || el.isError),
-        isSuccess: !!(acc.isSuccess === undefined ? el.isSuccess : acc.isSuccess && el.isSuccess),
-        hasData: !!(acc.hasData === undefined
-          ? el.data !== undefined
-          : acc.hasData && getHasData(el.data)),
-        status: getStatus({
-          isIdle: el.isIdle,
-          isLoading: el.isLoading,
-          isError: el.isError,
-          isSuccess: el.isSuccess
-        })
-      }),
-      {}
-    );
+export const SWRMergeStatesFn = (operations: any) => {
+  return Object.values(operations).reduce(
+    (acc: any, el: any) => ({
+      ...acc,
+      isLoading: !!(acc.isLoading || el.isValidating),
+      hasError: !!(acc.hasError || !!el.error),
+      isSuccess: !!(acc.isSuccess === undefined
+        ? getHasData(el.data)
+        : acc.isSuccess && getHasData(el.data)),
+      hasData: !!(acc.hasData === undefined
+        ? el.data !== undefined
+        : acc.hasData && getHasData(el.data))
+    }),
+    {}
+  );
+};
+
+export const GQLMergeStatesFn = (operations: any) => {
+  return Object.values(operations).reduce(
+    (acc: any, el: any) => ({
+      ...acc,
+      isLoading: !!(acc.isLoading || el.loading),
+      hasError: !!(acc.hasError || !!el.error),
+      isSuccess: !!(acc.isSuccess === undefined
+        ? getHasData(el.data)
+        : acc.isSuccess && getHasData(el.data)),
+      hasData: !!(acc.hasData === undefined
+        ? el.data !== undefined
+        : acc.hasData && getHasData(el.data))
+    }),
+    {}
+  );
 };

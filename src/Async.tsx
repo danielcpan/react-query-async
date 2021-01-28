@@ -3,32 +3,30 @@ import useAsync from './useAsync';
 import { useAsyncContext } from './AsyncProvider';
 import { DEFAULT_COMPONENTS } from './constants';
 import { IAsync } from './types';
-import { flexRender, defaultMergeQueryStatesFn, defaultMergeMutationStatesFn } from './utils';
+import { flexRender, RQMergeStatesFn } from './utils';
 
 const Async: React.FC<IAsync> = props => {
-  const { defaultConfig } = useAsyncContext();
+  const config = useAsyncContext();
 
-  const { queries = {} } = props.queries || defaultConfig.queries;
-  const { mutations = {} } = props.mutations || defaultConfig.mutations;
-  const isLoading = props.isLoading || defaultConfig.isLoading;
-  const isFetching = props.isFetching || defaultConfig.isFetching;
-  const hasError = props.hasError || defaultConfig.hasError;
-  const hasData = props.hasData || defaultConfig.hasData;
-  const showFetching = props.showFetching || defaultConfig.showFetching;
+  const { queries = {} } = props.queries || config.queries;
+  const { mutations = {} } = props.mutations || config.mutations;
+  const isLoading = props.isLoading || config.isLoading;
+  const isFetching = props.isFetching || config.isFetching;
+  const hasError = props.hasError || config.hasError;
+  const hasData = props.hasData || config.hasData;
+  const showFetching = props.showFetching || config.showFetching;
 
   const { Loading, Fetching, Error, NoData } = {
     ...props.components,
-    ...defaultConfig.components,
+    ...config.components,
     ...DEFAULT_COMPONENTS
   } as any;
 
   const mergeQueryStatesFn =
-    props.mergeQueryStatesFn || defaultConfig.mergeQueryStatesFn || defaultMergeQueryStatesFn;
+    props.mergeQueryStatesFn || config.mergeQueryStatesFn || RQMergeStatesFn;
 
   const mergeMutationStatesFn =
-    props.mergeMutationStatesFn ||
-    defaultConfig.mergeMutationStatesfn ||
-    defaultMergeMutationStatesFn;
+    props.mergeMutationStatesFn || config.mergeMutationStatesfn || RQMergeStatesFn;
 
   const [queryState, mutationState] = useAsync({
     queries,
@@ -48,7 +46,7 @@ const Async: React.FC<IAsync> = props => {
     return flexRender(Fetching, { ...propsToPass, children });
   }
 
-  if (hasError || queryState.isError || mutationState.isError) {
+  if (hasError || queryState.hasError || mutationState.hasError) {
     return flexRender(Error, { ...propsToPass, children });
   }
 
@@ -60,11 +58,12 @@ const Async: React.FC<IAsync> = props => {
 };
 
 const AsyncWithErrorBoundary = (props: any) => {
-  const { ErrorBoundary } = props.components;
+  const config = useAsyncContext() as any;
+  const { ErrorBoundary, errorBoundaryProps } = props || config;
 
   if (ErrorBoundary) {
     return (
-      <ErrorBoundary fallback={Error}>
+      <ErrorBoundary {...errorBoundaryProps}>
         <Async {...props} />
       </ErrorBoundary>
     );
