@@ -1,16 +1,10 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react';
 import { useQuery, QueryCache, QueryClient, useMutation } from 'react-query';
-import useAsync from '../core/useAsync';
+import { useAsync } from '../core';
 import { mock, sleep, renderWithRQClient } from './utils';
 
-import {
-  RQ_LOADING_AND_FETCHING,
-  RQ_LOADING,
-  RQ_FETCHING,
-  RQ_ERROR,
-  RQ_SUCCESS
-} from './constants';
+import { RQ_LOADING_AND_FETCHING, RQ_LOADING, RQ_ERROR, RQ_SUCCESS } from './constants';
 
 describe('useAsync', () => {
   describe('React Query', () => {

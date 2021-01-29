@@ -1,8 +1,8 @@
 export interface DefaultComponents {
-  Loading: (props: PropsToPass) => any | React.ReactNode | string;
-  Fetching: (props: PropsToPass) => any | React.ReactNode | string;
-  Error: (props: PropsToPass) => any | React.ReactNode | string;
-  NoData: (props: PropsToPass) => any | React.ReactNode | string;
+  Loading?: ((props: PropsToPass) => any) | React.ReactNode | string;
+  Fetching?: ((props: PropsToPass) => any) | React.ReactNode | string;
+  Error?: ((props: PropsToPass) => any) | React.ReactNode | string;
+  NoData?: ((props: PropsToPass) => any) | React.ReactNode | string;
 }
 
 export interface OperationState {
@@ -43,6 +43,16 @@ export interface PropsToPass {
   mutationState: OperationState;
 }
 
+export interface Config {
+  showIdle?: boolean | (() => boolean);
+  showFetching?: boolean | (() => boolean);
+  components?: DefaultComponents;
+  mergeQueryStatesFn?: (operations: any) => OperationState;
+  mergeMutationStatesFn?: (operations: any) => OperationState;
+  ErrorBoundary?: any;
+  errorBoundaryProps?: any;
+}
+
 export interface AsyncProviderProps {
-  config?: AsyncProps;
+  config?: Config;
 }
