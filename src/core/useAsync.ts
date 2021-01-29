@@ -6,7 +6,7 @@ const useAsync = ({
   mutations = {},
   mergeQueryStatesFn = RQMergeStatesFn,
   mergeMutationStatesFn = RQMergeStatesFn
-}: UseAsyncProps) => {
+}: UseAsyncProps = {}) => {
   const queryState = mergeQueryStatesFn(queries);
   const mutationState = mergeMutationStatesFn(mutations);
 

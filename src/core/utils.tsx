@@ -28,12 +28,12 @@ export const isFunction = (fn: any) => fn && {}.toString.call(fn) === '[object F
 
 export const isObject = (obj: any) => typeof obj === 'object' && obj !== null;
 
-const getStatus = ({ isLoading, isError, isSuccess }: any) => {
+const getStatus = ({ isLoading, hasError, isSuccess }: any) => {
   if (isLoading) return 'loading';
-  if (isError) return 'isError';
-  if (isSuccess) return 'isSuccess';
+  if (hasError) return 'error';
+  if (isSuccess) return 'success';
 
-  return 'unknown';
+  return 'idle';
 };
 
 export const getHasData = (data: any): boolean => {
@@ -58,9 +58,9 @@ export const RQMergeStatesFn = (operations: any) => {
           ? getHasData(el.data)
           : acc.hasData && getHasData(el.data)),
         status: getStatus({
-          isLoading: el.isLoading,
-          hasError: el.isError,
-          isSuccess: el.isSuccess
+          isLoading: acc.isLoading || el.isLoading,
+          hasError: acc.hasError || el.isError,
+          isSuccess: acc.isSuccess === undefined ? el.isSuccess : acc.isSuccess && el.isSuccess
         })
       }),
       {}

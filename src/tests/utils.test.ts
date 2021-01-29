@@ -1,5 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
-import { getHasData } from './utils';
+import { getHasData } from '../core/utils';
 
 describe('utils', () => {
   describe('getHasData', () => {
