@@ -12,7 +12,8 @@
     "build": "rollup -c",
     "watch": "rollup -cw",
     "lint": "eslint  --fix src --ext .js,.jsx,.ts,.tsx",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
