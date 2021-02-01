@@ -8,8 +8,8 @@ import { AsyncProps, PropsToPass, DefaultComponents } from './types';
 const Async: React.FC<AsyncProps> = props => {
   const config = useAsyncContext();
 
-  const { queries = {} } = props.queries || config.queries;
-  const { mutations = {} } = props.mutations || config.mutations;
+  const queries = props.queries || config.queries || {};
+  const mutations = props.mutations || config.mutations || {};
   const isLoading = props.isLoading || config.isLoading;
   const isFetching = props.isFetching || config.isFetching;
   const hasError = props.hasError || config.hasError;
@@ -17,9 +17,9 @@ const Async: React.FC<AsyncProps> = props => {
   const showFetching = props.showFetching || config.showFetching;
 
   const { Loading, Fetching, Error, NoData }: DefaultComponents = {
-    ...props.components,
+    ...DEFAULT_COMPONENTS,
     ...config.components,
-    ...DEFAULT_COMPONENTS
+    ...props.components
   };
 
   const mergeQueryStatesFn =
@@ -42,7 +42,10 @@ const Async: React.FC<AsyncProps> = props => {
     return flexRender(Loading, { ...propsToPass, children });
   }
 
-  if ((showFetching || isFetching) && (queryState.isFetching || mutationState.isFetching)) {
+  if (
+    (showFetching || isFetching) &&
+    (isFetching || queryState.isFetching || mutationState.isFetching)
+  ) {
     return flexRender(Fetching, { ...propsToPass, children });
   }
 
