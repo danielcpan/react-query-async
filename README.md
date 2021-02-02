@@ -94,7 +94,7 @@ const App = () => {
 
 ###### Don't want to supplement the components prop everytime? Set up the config to whatever you want with.
 
-```typescript
+```react
 import { Async } from "react-query-async"
 
 const Loading = () => <div>Loading</div>;
