@@ -73,6 +73,9 @@ export const getComponentHasData = (
     return !!((isFunction(hasData) && hasData()) || hasData);
   }
 
+  // Let empty idle states pass
+  if (Object.keys(queryState).length === 0 && Object.keys(mutationState).length === 0) return true;
+
   return queryState.hasData || mutationState.hasData;
 };
 const getStatus = ({ isLoading, hasError, isSuccess }: any): Status => {

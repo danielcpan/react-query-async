@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import { useQuery, QueryCache, QueryClient } from 'react-query';
+import { useQuery, QueryCache, QueryClient, useMutation } from 'react-query';
 import { Async } from '../core';
 import { mock, sleep, renderWithRQClient } from './utils';
 
@@ -101,42 +101,6 @@ describe('AsyncProvider', () => {
     });
 
     it('Should use custom No Data Component', async () => {
-      const Loading = () => <div>Loading</div>;
-      const Error = () => <div>Error</div>;
-      const NoData = () => <div>No Data</div>;
-
-      const App = () => {
-        const todosQuery = useQuery('todos', () => API.getTodos());
-        const { mutate, ...createTodoMutation } = useMutation(API.createTodo);
-
-        return (
-          <Async
-            queries={{ todosQuery }}
-            mutations={{ createTodoMutation }}
-            components={{ Loading, Error, NoData }}
-          >
-            {({
-              queries: {
-                todosQuery: { data: todos }
-              }
-            }) => (
-              <>
-                {todos.map(todo => (
-                  <div>{todo.name}</div>
-                ))}
-                <button
-                  onClick={() => {
-                    mutate({ name: "I'm a new Todo!" });
-                  }}
-                >
-                  Create New Todo
-                </button>
-              </>
-            )}
-          </Async>
-        );
-      };
-
       const Page = () => {
         const query1 = useQuery('query1', () => mock({ isSuccess: true, data: [] }), {
           retry: 0
@@ -240,11 +204,7 @@ describe('AsyncProvider', () => {
         });
 
         return (
-          <Async
-            queries={{ query1 }}
-            components={{ Loading: <div data-testid="custom-loading">Custom Loading</div> }}
-            hasData={() => true}
-          >
+          <Async queries={{ query1 }} components={defaultComponents} hasData={() => true}>
             {({
               queries: {
                 query1: { data }
@@ -259,5 +219,22 @@ describe('AsyncProvider', () => {
       expect(queryByTestId('data')).toBeNull();
       expect(queryByTestId('custom-loading')).not.toBeNull();
     });
+  });
+
+  it('Idle states should still show data', () => {
+    const Page = () => {
+      const mutation1 = useMutation(() => mock({ isSuccess: true, data: 'Foo Bar' }));
+
+      return (
+        <Async mutations={{ mutation1 }} hasData={() => true}>
+          {() => <div data-testid="data">{mutation1.data}</div>}
+        </Async>
+      );
+    };
+
+    const { queryByTestId } = renderWithRQClient(queryClient, <Page />);
+
+    expect(queryByTestId('data')).not.toBeNull();
+    expect(queryByTestId('custom-loading')).toBeNull();
   });
 });
