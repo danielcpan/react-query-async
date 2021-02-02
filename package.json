@@ -13,7 +13,7 @@
     "watch": "rollup -cw",
     "lint": "eslint  --fix src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build npm version patch"
   },
   "repository": {
     "type": "git",
