@@ -12,7 +12,7 @@ A HOC utility tool built for [react-query](https://www.npmjs.com/package/react-q
 
 ### Without Async
 
-```react
+```tsx
 import { useQuery, useMutation } from "react-query"
 
 const Loading = () => <div>Loading</div>;
@@ -51,7 +51,7 @@ const App = () => {
 
 Instead of having to constantly define stateful views, write it once and feed it into the Async HOC. Wrap your code with the Async HOC and it will do the rest.
 
-```react
+```tsx
 import { Async } from "react-query-async"
 import { useQuery, useMutation } from "react-query"
 
@@ -94,7 +94,7 @@ const App = () => {
 
 ###### Don't want to supplement the components prop everytime? Set up the config to whatever you want with.
 
-```react
+```tsx
 import { Async } from "react-query-async"
 
 const Loading = () => <div>Loading</div>;
@@ -121,7 +121,7 @@ document.getElementById('root')
 
 ### Async
 
-```react
+```tsx
 <Async 
   queries={{ query1, query2 }} 
   mutations={{ mutation1 }} 
@@ -194,7 +194,7 @@ document.getElementById('root')
 
 ### useAsync
 
-```react
+```tsx
 const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, mutations: { mutation1 }})
 ```
 
@@ -228,7 +228,7 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 
 #### AsyncProvider
 
-```react
+```tsx
 <AsyncProvider 
   config={
     showFetching: false,
