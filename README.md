@@ -296,7 +296,13 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 - ```config  ```
   - Same as Async
 
+## Quick Setup
 
+```tsx
+import { RQMergeStatesFn, SWRMergeStatesFn, GQLMergeStatesFn } from "react-query-async" 
+```
+
+Out of the box configured with RQMergeStatesFn which supports react-query however SWRMergeStatesFn and GQLMergeStatesFn provided for convenience. The latter two have not been fully tested yet.
 
 ## Examples
 
