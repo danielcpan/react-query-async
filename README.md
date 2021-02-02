@@ -162,9 +162,9 @@ document.getElementById('root')
     - ```NoData: ({ queryState, mutationState, queries, mutations }) => any | React.ReactNode | string```
   - Feel free to configure state to whatever you want. All the information you need is passed back so it's as flexible as possible
 - ```mergeQueryStatesFn?: (operations: any) => OperationState```
-  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Advanced Usage to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
+  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
 - ```mergeMutationStatesFn?: (operations: any) => OperationState```
-  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Advanced Usage to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
+  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
 - ```ErrorBoundary?: any```
   - In case you want each instance of the Async HOC to have an Error Boundary as a fall back.
 - ```errorBoundaryProps?: any```
@@ -252,7 +252,8 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 
 
 
-## Advanced Usage
+## Examples
 
-TODO
+- [Basic w/ React-Query](https://codesandbox.io/s/basic-usage-with-react-query-cxd44?file=/src/App.js)
+- More to come...
 
