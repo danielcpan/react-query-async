@@ -25,7 +25,7 @@ const App = () => {
   
   if (todosQuery.isLoading || createTodoMutation.isLoading) return <Loading />
   
-	if (todosQuery.isError || createTodoMutation.isError) return <Error />
+  if (todosQuery.isError || createTodoMutation.isError) return <Error />
   
   if (!!todosQuery.data) return <NoData />
   
@@ -35,10 +35,10 @@ const App = () => {
     <>
       {todos.map(todo => <div>{todo.name}</div>)}
       <button 
-    		onClick={() => {
-	      	mutate({ name: "I'm a new Todo!"})
-      	}}
-			>
+        onClick={() => {
+          mutate({ name: "I'm a new Todo!"})
+        }}
+      >
         Create New Todo
       </button>
     </>    
@@ -64,28 +64,28 @@ const App = () => {
 
   return (
     <Async 
-    	queries={{ todosQuery }} 
-  		mutations={{ createTodoMutation }} 
+      queries={{ todosQuery }} 
+      mutations={{ createTodoMutation }} 
       components={{ Loading, Error, NoData }}
     >
-	    {({
-  			queries: {
-			  	todosQuery: { data: todos }
-				}
-			}) => (
+      {({
+        queries: {
+          todosQuery: { data: todos }
+        }
+      }) => (
         <>
-	        {todos.map(todo => <div>{todo.name}</div>)}
-        	<button 
-        		onClick={() => {
-        			mutate({ name: "I'm a new Todo!"})
-		      	}}
+          {todos.map(todo => <div>{todo.name}</div>)}
+          <button 
+            onClick={() => {
+              mutate({ name: "I'm a new Todo!"})
+            }}
           >
             Create New Todo
           </button>
         </>
       )}
     </Async>
-	);
+  );
 };
 ```
 
@@ -102,14 +102,14 @@ const Error = () => <div>Error</div>;
 const NoData = () => <div>No Data</div>;
 
 const config = {
-	showFetching: true,
-	components: { Loading, Error, NoData, Fetching }	
+  showFetching: true,
+  components: { Loading, Error, NoData, Fetching }  
 }
 
 ReactDOM.render( 
-	<AsyncProvider config={config}> // Config will be passed to all instances of Async
-		<App />
-	</AsyncProvider>,
+  <AsyncProvider config={config}> // Config will be passed to all instances of Async
+    <App />
+  </AsyncProvider>,
 document.getElementById('root')
 );
 ```
@@ -122,16 +122,16 @@ document.getElementById('root')
 
 ```typescript
 <Async 
-	queries={{ query1, query2 }} 
-	mutations={{ mutation1 }} 
-	showFetching 
-	components={{ 
-		Loading: () => "Custom Loading", // Supports React Components or 
-		Fetching: "Fetching!" // even just a string!
+  queries={{ query1, query2 }} 
+  mutations={{ mutation1 }} 
+  showFetching 
+  components={{ 
+    Loading: () => "Custom Loading", // Supports React Components or 
+    Fetching: "Fetching!" // even just a string!
   }}
   ErrorBoundary={MyCustomErrorBoundary} // Wrap instance with your own error boundary
 >
-	{({
+  {({
    queries,
    mutations,
    queryState,
@@ -140,7 +140,7 @@ document.getElementById('root')
 </Async>
 ```
 
-##### 	Parameters
+#####   Parameters
 
 - ```queries?: any```
   - Any async operation that fetches data
@@ -197,7 +197,7 @@ document.getElementById('root')
 const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, mutations: { mutation1 }})
 ```
 
-##### 	Parameters
+#####   Parameters
 
 - ```queries?: any```
   - Same as Async
@@ -229,21 +229,21 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 
 ```typescript
 <AsyncProvider 
-	config={
-		showFetching: false,
-		components={{
-			Loading: "Custom Loading",
-			Fetching: "Custom Fetching",
-			Error: () => "Custom Error",
-			NoData: () => "Custom No Data"
-		}}
-		mergeQueryStatesFn={customMergeFn}
-		mergeMutationStatesFn={customMergeFn}
-		ErrorBoundary={MyCustomErrorBoundary}
-		errorBoundaryProps={ fallback: "I'm an error fallback"}
-	}
+  config={
+    showFetching: false,
+    components={{
+      Loading: "Custom Loading",
+      Fetching: "Custom Fetching",
+      Error: () => "Custom Error",
+      NoData: () => "Custom No Data"
+    }}
+    mergeQueryStatesFn={customMergeFn}
+    mergeMutationStatesFn={customMergeFn}
+    ErrorBoundary={MyCustomErrorBoundary}
+    errorBoundaryProps={ fallback: "I'm an error fallback"}
+  }
 >
-	<App />
+  <App />
 </AsyncProvider>
 ```
 
