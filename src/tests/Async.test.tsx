@@ -101,6 +101,42 @@ describe('AsyncProvider', () => {
     });
 
     it('Should use custom No Data Component', async () => {
+      const Loading = () => <div>Loading</div>;
+      const Error = () => <div>Error</div>;
+      const NoData = () => <div>No Data</div>;
+
+      const App = () => {
+        const todosQuery = useQuery('todos', () => API.getTodos());
+        const { mutate, ...createTodoMutation } = useMutation(API.createTodo);
+
+        return (
+          <Async
+            queries={{ todosQuery }}
+            mutations={{ createTodoMutation }}
+            components={{ Loading, Error, NoData }}
+          >
+            {({
+              queries: {
+                todosQuery: { data: todos }
+              }
+            }) => (
+              <>
+                {todos.map(todo => (
+                  <div>{todo.name}</div>
+                ))}
+                <button
+                  onClick={() => {
+                    mutate({ name: "I'm a new Todo!" });
+                  }}
+                >
+                  Create New Todo
+                </button>
+              </>
+            )}
+          </Async>
+        );
+      };
+
       const Page = () => {
         const query1 = useQuery('query1', () => mock({ isSuccess: true, data: [] }), {
           retry: 0
