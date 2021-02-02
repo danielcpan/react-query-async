@@ -8,6 +8,14 @@ A HOC utility tool built for [react-query](https://www.npmjs.com/package/react-q
 - useAsync (Hook)
 - AsyncProvider (Config exposed to all instances of Async and useAsync)
 
+## Quick Setup
+
+```tsx
+import { RQMergeStatesFn, SWRMergeStatesFn, GQLMergeStatesFn } from "react-query-async" 
+```
+
+Out of the box configured with RQMergeStatesFn which supports react-query however SWRMergeStatesFn and GQLMergeStatesFn provided for convenience. The latter two have not been fully tested yet.
+
 ## Usage with React-Query
 
 ### Without Async
@@ -204,6 +212,7 @@ document.getElementById('root')
 - ```mergeMutationStatesFn?: (operations: any) => OperationState```
   
   - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom hook!
+  - Don't like that mutations also trigger hard loading? Redefine the mergeMutationStatesFn to to exclude hard loading states!
   - Any custom hook supported as long as operations is reduced to:
     - isLoading
     - hasError
@@ -295,14 +304,6 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 
 - ```config  ```
   - Same as Async
-
-## Quick Setup
-
-```tsx
-import { RQMergeStatesFn, SWRMergeStatesFn, GQLMergeStatesFn } from "react-query-async" 
-```
-
-Out of the box configured with RQMergeStatesFn which supports react-query however SWRMergeStatesFn and GQLMergeStatesFn provided for convenience. The latter two have not been fully tested yet.
 
 ## Examples
 
