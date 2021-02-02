@@ -167,7 +167,7 @@ document.getElementById('root')
 
   - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom hook! 
 
-  - Any custom hook supported as long as it returns:
+  - Any custom hook supported as long as operations is reduced to:
 
     - isLoading
     - hasError
@@ -204,7 +204,7 @@ document.getElementById('root')
 - ```mergeMutationStatesFn?: (operations: any) => OperationState```
   
   - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom hook!
-  - Any custom hook supported as long as it returns:
+  - Any custom hook supported as long as operations is reduced to:
     - isLoading
     - hasError
     - hasData
