@@ -5,6 +5,12 @@ import { Async } from '../core';
 import { mock, sleep, renderWithRQClient } from './utils';
 
 describe('AsyncProvider', () => {
+  const defaultComponents = {
+    Loading: <div data-testid="custom-loading">Custom Loading</div>,
+    Fetching: <div data-testid="custom-fetching">Custom Fetching</div>,
+    Error: <div data-testid="custom-error">Custom Error</div>,
+    NoData: <div data-testid="custom-no-data">Custom No Data</div>
+  };
   const queryCache = new QueryCache();
   const queryClient = new QueryClient({ queryCache });
 
@@ -49,11 +55,7 @@ describe('AsyncProvider', () => {
         });
 
         return (
-          <Async
-            queries={{ query1 }}
-            isFetching
-            components={{ Fetching: <div data-testid="custom-fetching">Custom Fetching</div> }}
-          >
+          <Async queries={{ query1 }} isFetching components={defaultComponents}>
             {({
               queries: {
                 query1: { data }
@@ -77,10 +79,7 @@ describe('AsyncProvider', () => {
         const query1 = useQuery('query1', () => mock({ isSuccess: false }), { retry: 0 });
 
         return (
-          <Async
-            queries={{ query1 }}
-            components={{ Error: <div data-testid="custom-error">Custom Error</div> }}
-          >
+          <Async queries={{ query1 }} components={defaultComponents}>
             {({
               queries: {
                 query1: { data }
@@ -108,10 +107,7 @@ describe('AsyncProvider', () => {
         });
 
         return (
-          <Async
-            queries={{ query1 }}
-            components={{ NoData: <div data-testid="custom-no-data">Custom No Data</div> }}
-          >
+          <Async queries={{ query1 }} components={defaultComponents}>
             {({
               queries: {
                 query1: { data }
@@ -128,6 +124,104 @@ describe('AsyncProvider', () => {
       await sleep(10);
 
       expect(queryByTestId('custom-no-data')).not.toBeNull();
+    });
+  });
+
+  describe('Manual controls should support both booleans and functions that resolve to booleans', () => {
+    it('should support isLoading function', async () => {
+      const Page = () => {
+        const query1 = useQuery('query1', () => mock({ isSuccess: true, data: 'Foo Bar' }), {
+          retry: 0
+        });
+
+        return (
+          <Async queries={{ query1 }} components={defaultComponents} isLoading={() => true}>
+            {({
+              queries: {
+                query1: { data }
+              }
+            }) => <div data-testid="data">{data}</div>}
+          </Async>
+        );
+      };
+
+      const { queryByTestId } = renderWithRQClient(queryClient, <Page />);
+
+      expect(queryByTestId('data')).toBeNull();
+      expect(queryByTestId('custom-loading')).not.toBeNull();
+    });
+
+    it('should support isFetching function', async () => {
+      const Page = () => {
+        const query1 = useQuery('query1', () => mock({ isSuccess: true, data: 'Foo Bar' }), {
+          retry: 0
+        });
+
+        return (
+          <Async queries={{ query1 }} components={defaultComponents} isFetching={() => true}>
+            {({
+              queries: {
+                query1: { data }
+              }
+            }) => <div data-testid="data">{data}</div>}
+          </Async>
+        );
+      };
+
+      const { queryByTestId } = renderWithRQClient(queryClient, <Page />);
+
+      expect(queryByTestId('data')).toBeNull();
+      expect(queryByTestId('custom-loading')).not.toBeNull();
+    });
+
+    it('should support hasError function', async () => {
+      const Page = () => {
+        const query1 = useQuery('query1', () => mock({ isSuccess: true, data: 'Foo Bar' }), {
+          retry: 0
+        });
+
+        return (
+          <Async queries={{ query1 }} components={defaultComponents} hasError={() => true}>
+            {({
+              queries: {
+                query1: { data }
+              }
+            }) => <div data-testid="data">{data}</div>}
+          </Async>
+        );
+      };
+
+      const { queryByTestId } = renderWithRQClient(queryClient, <Page />);
+
+      expect(queryByTestId('data')).toBeNull();
+      expect(queryByTestId('custom-loading')).not.toBeNull();
+    });
+
+    it('should support hasData function', async () => {
+      const Page = () => {
+        const query1 = useQuery('query1', () => mock({ isSuccess: true, data: 'Foo Bar' }), {
+          retry: 0
+        });
+
+        return (
+          <Async
+            queries={{ query1 }}
+            components={{ Loading: <div data-testid="custom-loading">Custom Loading</div> }}
+            hasData={() => true}
+          >
+            {({
+              queries: {
+                query1: { data }
+              }
+            }) => <div data-testid="data">{data}</div>}
+          </Async>
+        );
+      };
+
+      const { queryByTestId } = renderWithRQClient(queryClient, <Page />);
+
+      expect(queryByTestId('data')).toBeNull();
+      expect(queryByTestId('custom-loading')).not.toBeNull();
     });
   });
 });

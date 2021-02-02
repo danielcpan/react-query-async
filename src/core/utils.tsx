@@ -1,22 +1,22 @@
 import React from 'react';
-import { OperationState } from './types';
+import { OperationState, Status } from './types';
 
-export const flexRender = (Comp: any, props?: any) => {
+export const flexRender = (Comp: any, props?: any): any => {
   return isReactComponent(Comp) ? <Comp {...props} /> : Comp;
 };
 
-export const isReactComponent = (comp: any) => {
+export const isReactComponent = (comp: any): boolean => {
   return isClassComponent(comp) || typeof comp === 'function' || isExoticComponent(comp);
 };
 
-export const isClassComponent = (comp: any) => {
+export const isClassComponent = (comp: any): boolean => {
   return (
     typeof comp === 'function' &&
     (() => !!Object.getPrototypeOf(comp)?.prototype?.isReactComponent)()
   );
 };
 
-export const isExoticComponent = (comp: any) => {
+export const isExoticComponent = (comp: any): boolean => {
   return (
     typeof comp === 'object' &&
     typeof comp.$$typeof === 'symbol' &&
@@ -24,11 +24,58 @@ export const isExoticComponent = (comp: any) => {
   );
 };
 
-export const isFunction = (fn: any) => fn && {}.toString.call(fn) === '[object Function]';
+export const isFunction = (fn: any): boolean => fn && {}.toString.call(fn) === '[object Function]';
 
-export const isObject = (obj: any) => typeof obj === 'object' && obj !== null;
+export const isObject = (obj: any): boolean => typeof obj === 'object' && obj !== null;
 
-const getStatus = ({ isLoading, hasError, isSuccess }: any) => {
+export const getComponentIsLoading = (
+  isLoading: () => boolean | boolean | undefined,
+  queryState: OperationState,
+  mutationState: OperationState
+) => {
+  if (isLoading !== undefined) {
+    return !!((isFunction(isLoading) && isLoading()) || isLoading);
+  }
+
+  return queryState.isLoading || mutationState.isLoading;
+};
+
+export const getComponentIsFetching = (
+  isFetching: () => boolean | boolean | undefined,
+  queryState: OperationState,
+  mutationState: OperationState
+): boolean => {
+  if (isFetching !== undefined) {
+    return !!((isFunction(isFetching) && isFetching()) || isFetching);
+  }
+
+  return queryState.isFetching || mutationState.isFetching;
+};
+
+export const getComponentHasError = (
+  hasError: () => boolean | boolean | undefined,
+  queryState: OperationState,
+  mutationState: OperationState
+) => {
+  if (hasError !== undefined) {
+    return !!((isFunction(hasError) && hasError()) || hasError);
+  }
+
+  return queryState.hasError || mutationState.hasError;
+};
+
+export const getComponentHasData = (
+  hasData: () => boolean | boolean | undefined,
+  queryState: OperationState,
+  mutationState: OperationState
+) => {
+  if (hasData !== undefined) {
+    return !!((isFunction(hasData) && hasData()) || hasData);
+  }
+
+  return queryState.hasData || mutationState.hasData;
+};
+const getStatus = ({ isLoading, hasError, isSuccess }: any): Status => {
   if (isLoading) return 'loading';
   if (hasError) return 'error';
   if (isSuccess) return 'success';

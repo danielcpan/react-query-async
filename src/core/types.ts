@@ -19,8 +19,7 @@ export interface AsyncProps {
   isFetching?: boolean | (() => boolean);
   hasError?: boolean | (() => boolean);
   hasData?: boolean | (() => boolean);
-  showIdle?: boolean | (() => boolean);
-  showFetching?: boolean | (() => boolean);
+  showFetching?: boolean;
   components?: DefaultComponents;
   mergeQueryStatesFn?: (operations: any) => OperationState;
   mergeMutationStatesFn?: (operations: any) => OperationState;
@@ -44,8 +43,7 @@ export interface PropsToPass {
 }
 
 export interface Config {
-  showIdle?: boolean | (() => boolean);
-  showFetching?: boolean | (() => boolean);
+  showFetching?: boolean;
   components?: DefaultComponents;
   mergeQueryStatesFn?: (operations: any) => OperationState;
   mergeMutationStatesFn?: (operations: any) => OperationState;
@@ -56,3 +54,5 @@ export interface Config {
 export interface AsyncProviderProps {
   config?: Config;
 }
+
+export type Status = 'loading' | 'error' | 'success' | 'idle';

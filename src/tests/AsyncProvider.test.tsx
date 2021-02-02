@@ -7,7 +7,6 @@ import { mock, sleep, renderWithRQClient } from './utils';
 
 describe('AsyncProvider', () => {
   const defaultConfig = {
-    showIdle: false,
     showFetching: false,
     components: {
       Loading: <div data-testid="custom-loading">Custom Loading</div>,

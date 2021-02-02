@@ -2,7 +2,14 @@ import React from 'react';
 import useAsync from './useAsync';
 import { useAsyncContext } from './AsyncProvider';
 import { DEFAULT_COMPONENTS } from './constants';
-import { flexRender, RQMergeStatesFn } from './utils';
+import {
+  getComponentIsLoading,
+  getComponentIsFetching,
+  getComponentHasError,
+  getComponentHasData,
+  flexRender,
+  RQMergeStatesFn
+} from './utils';
 import { AsyncProps, PropsToPass, DefaultComponents } from './types';
 
 const Async: React.FC<AsyncProps> = props => {
@@ -38,22 +45,22 @@ const Async: React.FC<AsyncProps> = props => {
   const propsToPass = { queryState, mutationState, queries, mutations } as PropsToPass;
   const { children } = props;
 
-  if (isLoading || queryState.isLoading || mutationState.isLoading) {
+  if (getComponentIsLoading(isLoading, queryState, mutationState)) {
     return flexRender(Loading, { ...propsToPass, children });
   }
 
   if (
     (showFetching || isFetching) &&
-    (isFetching || queryState.isFetching || mutationState.isFetching)
+    getComponentIsFetching(isFetching, queryState, mutationState)
   ) {
     return flexRender(Fetching, { ...propsToPass, children });
   }
 
-  if (hasError || queryState.hasError || mutationState.hasError) {
+  if (getComponentHasError(hasError, queryState, mutationState)) {
     return flexRender(Error, { ...propsToPass, children });
   }
 
-  if (hasData === false || (!queryState.hasData && !mutationState.hasData)) {
+  if (!getComponentHasData(hasData, queryState, mutationState)) {
     return flexRender(NoData, { ...propsToPass, children });
   }
 
