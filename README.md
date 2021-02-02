@@ -12,7 +12,7 @@ A HOC utility tool built for [react-query](https://www.npmjs.com/package/react-q
 
 ### Without Async
 
-```typescript
+```react
 import { useQuery, useMutation } from "react-query"
 
 const Loading = () => <div>Loading</div>;
@@ -21,7 +21,7 @@ const NoData = () => <div>No Data</div>;
 
 const App = () => {
   const todosQuery = useQuery('todos', () => API.getTodos());
-  const { mutate, ...createTodoMutation} = useMutation(API.createTodo);
+  const { mutate, ...createTodoMutation } = useMutation(API.createTodo);
   
   if (todosQuery.isLoading || createTodoMutation.isLoading) return <Loading />
   
@@ -29,11 +29,12 @@ const App = () => {
   
   if (!!todosQuery.data) return <NoData />
   
-  const { data: todos }= todosQuery;
+  const { data: todos } = todosQuery;
   
   return (
     <>
       {todos.map(todo => <div>{todo.name}</div>)}
+      
       <button 
         onClick={() => {
           mutate({ name: "I'm a new Todo!"})
@@ -50,7 +51,7 @@ const App = () => {
 
 Instead of having to constantly define stateful views, write it once and feed it into the Async HOC. Wrap your code with the Async HOC and it will do the rest.
 
-```typescript
+```react
 import { Async } from "react-query-async"
 import { useQuery, useMutation } from "react-query"
 
@@ -120,7 +121,7 @@ document.getElementById('root')
 
 ### Async
 
-```typescript
+```react
 <Async 
   queries={{ query1, query2 }} 
   mutations={{ mutation1 }} 
@@ -193,7 +194,7 @@ document.getElementById('root')
 
 ### useAsync
 
-```typescript
+```react
 const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, mutations: { mutation1 }})
 ```
 
@@ -227,7 +228,7 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 
 #### AsyncProvider
 
-```typescript
+```react
 <AsyncProvider 
   config={
     showFetching: false,
