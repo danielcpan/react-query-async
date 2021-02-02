@@ -154,6 +154,7 @@ document.getElementById('root')
 - ```hasError?: boolean | (() => boolean)```
 - ```hasData?: boolean | (() => boolean)```
 - ```showFetching?: boolean```
+  
   - By default **false** so Fetch State will not be displayed
 - ```components?: DefaultComponents```
   - ```DefaultComponents```
@@ -163,12 +164,56 @@ document.getElementById('root')
     - ```NoData: ({ queryState, mutationState, queries, mutations }) => any | React.ReactNode | string```
   - Feel free to configure state to whatever you want. All the information you need is passed back so it's as flexible as possible
 - ```mergeQueryStatesFn?: (operations: any) => OperationState```
-  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
+
+  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom hook! 
+
+  - Any custom hook supported as long as it returns:
+
+    - isLoading
+    - hasError
+    - hasData
+    - isFetching - Optional
+
+  - React Query Example - Default used
+
+    ```tsx
+    const RQMergeStatesFn = (operations: any) => {
+      return Object.values(operations)
+        .filter((el: any) => el.status !== 'idle')
+        .reduce(
+          (acc: any, el: any) => ({
+            ...acc,
+            isLoading: !!(acc.isLoading || el.isLoading),
+            isPaused: !!(acc.isPaused || el.isPaused),
+            isFetching: !!(acc.isFetching || el.isFetching),
+            hasError: !!(acc.hasError || el.isError),
+            isSuccess: !!(acc.isSuccess === undefined ? el.isSuccess : acc.isSuccess && el.isSuccess),
+            hasData: !!(acc.hasData === undefined
+              ? getHasData(el.data)
+              : acc.hasData && getHasData(el.data)),
+            status: getStatus({
+              isLoading: acc.isLoading || el.isLoading,
+              hasError: acc.hasError || el.isError,
+              isSuccess: acc.isSuccess === undefined ? el.isSuccess : acc.isSuccess && el.isSuccess
+            })
+          }),
+          {}
+        ) as OperationState;
+    };
+    ```
 - ```mergeMutationStatesFn?: (operations: any) => OperationState```
-  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom data fetch hook!
+  
+  - Out of the box it is defaulted to support [react-query](https://www.npmjs.com/package/react-query) however see Examples to configure to [swr](https://www.npmjs.com/package/swr), [@apollo/graphql](https://www.npmjs.com/package/@apollo/graphql) or any custom hook!
+  - Any custom hook supported as long as it returns:
+    - isLoading
+    - hasError
+    - hasData
+    - isFetching - Optional
 - ```ErrorBoundary?: any```
+  
   - In case you want each instance of the Async HOC to have an Error Boundary as a fall back.
 - ```errorBoundaryProps?: any```
+  
   - Props to be passed to ErrorBoundary
 
 ##### Returns
@@ -256,5 +301,6 @@ const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, muta
 ## Examples
 
 - [Basic w/ React-Query](https://codesandbox.io/s/basic-usage-with-react-query-cxd44?file=/src/App.js)
+- [Basic w/ Custom Hooks](https://codesandbox.io/s/basic-w-custom-hooks-3uoxc?file=/src/App.js)
 - More to come...
 
