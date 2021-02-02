@@ -4,8 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
+  "types": "dist/core/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "core"
   ],
   "scripts": {
     "prebuild": "rm -rf dist",
