@@ -120,16 +120,35 @@ document.getElementById('root')
 
 ### Async
 
+```typescript
+<Async 
+	queries={{ query1, query2 }} 
+	mutations={{ mutation1 }} 
+	showFetching 
+	components={{ 
+		Loading: () => "Custom Loading", // Supports React Components or 
+		Fetching: "Fetching!" // even just a string!
+  }}
+  ErrorBoundary={MyCustomErrorBoundary} // Wrap instance with your own error boundary
+>
+	{({
+   queries,
+   mutations,
+   queryState,
+   mutationState.
+  }) => "Data here!"}
+</Async>
+```
+
 ##### 	Parameters
 
 - ```queries?: any```
   - Any async operation that fetches data
   - Takes in a key value hash i.e ```queries={{ todosQuery, postsQuery }}```
-- mutations?: any
+- ```mutations?: any```
   - Any async operation that updates data
   - Takes in a key value hash i.e ```mutations={{ addTodosMutation, deleteTodoMutation }}```
 - ```isLoading?: boolean | (() => boolean)```
-  - 
 - ```isFetching?: boolean | (() => boolean)```
 - ```hasError?: boolean | (() => boolean)```
 - ```hasData?: boolean | (() => boolean)```
@@ -159,20 +178,24 @@ document.getElementById('root')
     - **isLoading** if at least 1 query is loading 
     - **isFetching** if at least 1 query is fetching 
     - **hasError** if at least 1 query has error 
-    - **NoData** if at least 1 query has no Data 
+    - **hasData** if at least 1 query has no Data 
 - ```mutationState: OperationState```
   - The state of all mutations
   - OperationState
     - **isLoading** if at least 1 query is loading 
     - **isFetching** if at least 1 query is fetching 
     - **hasError** if at least 1 query has error 
-    - **NoData** if at least 1 query has no Data 
+    - **hasData** if at least 1 query has no Data 
 - ```queries: any```
   - Same as Params
 - ```mutations: any```
   - Same as Params
 
 ### useAsync
+
+```typescript
+const [queryState, mutationState] = useAsync({ queries: { query1, query2 }, mutations: { mutation1 }})
+```
 
 ##### 	Parameters
 
@@ -203,6 +226,26 @@ document.getElementById('root')
     - **NoData** if at least 1 query has no Data 
 
 #### AsyncProvider
+
+```typescript
+<AsyncProvider 
+	config={
+		showFetching: false,
+		components={{
+			Loading: "Custom Loading",
+			Fetching: "Custom Fetching",
+			Error: () => "Custom Error",
+			NoData: () => "Custom No Data"
+		}}
+		mergeQueryStatesFn={customMergeFn}
+		mergeMutationStatesFn={customMergeFn}
+		ErrorBoundary={MyCustomErrorBoundary}
+		errorBoundaryProps={ fallback: "I'm an error fallback"}
+	}
+>
+	<App />
+</AsyncProvider>
+```
 
 - ```config  ```
   - Same as Async
